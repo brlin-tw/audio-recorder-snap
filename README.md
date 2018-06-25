@@ -13,9 +13,7 @@ distributions.</p>
 </p>
 -->
 
-<!-- Uncomment and modify this when you have a screenshot
-![my-snap-name](/home/%E6%9E%97%E5%8D%9A%E4%BB%81/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%96%93/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%B0%88%E6%A1%88/Snapcrafters%20template.%20Fork%20to%20your%20GitHub%20account%20and%20rename%20it%20for%20the%20snap%20you%27re%20creating/screenshot.png "my-snap-name")
--->
+![Screenshot of the Snapped Application](snap/screenshots/view-main-recording.png "Screenshot of the Snapped Application")
 
 <p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters</p>
 
@@ -36,7 +34,7 @@ Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) ar
   - [x] Update logos and references to `[Project]` and `[my-snap-name]`
   - [x] Create a snap that runs in `devmode`
   - [x] Register the snap in the store, **using the preferred upstream name**
-  - [ ] Add a screenshot to this `README.md`
+  - [x] Add a screenshot to this `README.md`
   - [ ] Publish the `devmode` snap in the Snap store edge channel
   - [ ] Add install instructions to this `README.md`
   - [ ] Update snap store metadata, icons and screenshots
