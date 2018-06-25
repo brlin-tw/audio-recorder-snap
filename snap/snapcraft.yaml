@@ -1,5 +1,46 @@
+%YAML 1.2
+---
 name: audio-recorder
-version: bzr
+version: replaced-by-version-script
+version-script: |
+  set -eu
+
+  cd parts/audio-recorder/src
+  upstream_version="$(
+    grep PACKAGE_VERSION src/config.h \
+      | cut --delimiter=' ' --field=3 \
+      | tr --delete '"'
+  )"
+
+  upstream_dirtiness=''
+  if \
+    test \
+    "$(
+      bzr version-info \
+        --custom \
+        --template={clean}
+    )" \
+    -eq \
+    0; then
+    upstream_dirtiness=-dirty
+  fi
+  upstream_revision="$(
+    bzr version-info \
+      --custom \
+      --template={revno}
+  )"
+  cd ../../..
+
+  packaging_revision="$(
+    git \
+      describe \
+      --abbrev=4 \
+      --always \
+      --dirty=-d
+  )"
+
+  printf -- '%s' "${upstream_version}+rev${upstream_revision}${upstream_dirtiness}+pkg-${packaging_revision}"
+
 summary: A free audio-recorder for Linux
 description: |
   This amazing program allows you to record your favourite music or audio to a file.
@@ -24,8 +65,40 @@ description: |
   User can also control the recorder from command line with --command <arg> option.
   See audio-recorder --help for more information.
 
-confinement: devmode
 icon: snap/gui/audio-recorder.svg
+grade: devel
+confinement: devmode
+
+slots:
+  mpris-service:
+    interface: mpris
+
+apps:
+  audio-recorder:
+    command: >
+      desktop-launch
+      audio-recorder
+    desktop: share/applications/audio-recorder.desktop
+    plugs:
+    # graphical resources access
+    - desktop
+    - desktop-legacy
+    - x11
+    - unity7
+
+    # storage access
+    - home
+    - removable-media
+
+    # audio access
+    - pulseaudio
+
+    # unknown
+    - gsettings
+    - mount-observe
+    slots:
+    # player control access
+    - mpris-service
 
 parts:
   # Patches to fix other parts
@@ -96,11 +169,23 @@ parts:
   audio-recorder:
     after:
     - ccache
+    - desktop-gtk3
     - patches
 
     source: lp:audio-recorder
+    override-pull: |
+      set -eu
+
+      bzr checkout \
+        --lightweight \
+        lp:audio-recorder \
+        .
 
     plugin: autotools
+    configflags:
+    - --datarootdir=/snap/audio-recorder/current/share
+    - CC=ccache gcc
+    - CXX=ccache g++
     build-packages:
     - gcc
     - intltool
@@ -112,8 +197,53 @@ parts:
     - libgtk-3-dev
     - pkg-config
     stage-packages:
+    - gstreamer1.0-plugins-base
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-ugly
+    - gstreamer1.0-pulseaudio
     - libappindicator3-1
     - libglib2.0-0
     - libgstreamer1.0-0
     - libgstreamer-plugins-base1.0-0
-    - libgtk-3-dev
+    - libgtk-3-0
+
+    # From automigration
+    - libgl1-mesa-glx
+    - libglu1-mesa
+    - libgpm2
+    - libxcb-glx0
+    - libxxf86vm1
+    organize:
+      snap/audio-recorder/current/: /
+    filesets:
+      app-resources:
+      - share/audio-recorder/*
+      cleanup-debris-from-organizing:
+      - -snap/*
+      executables:
+      - bin/*
+      desktop-entries:
+      - share/applications/*
+      files-from-staging-packages:
+      - usr/*
+      glib-schemas:
+      - share/glib-2.0/schemas/*
+      icons:
+      - share/icons/*
+      localization:
+      - share/locale/*
+      manpages:
+      - share/man/*
+      pixmaps:
+      - share/pixmaps/*
+    stage:
+    - $cleanup-debris-from-organizing
+    override-stage: |
+      set -eu
+
+      snapcraftctl stage
+
+      sed \
+        --file "${SNAPCRAFT_STAGE}"/patches/postprocess-desktop-entries.sed \
+        --in-place \
+        "${SNAPCRAFT_STAGE}"/share/applications/*.desktop
