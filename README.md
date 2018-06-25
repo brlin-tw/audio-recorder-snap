@@ -13,7 +13,9 @@ distributions.</p>
 </p>
 -->
 
-![Screenshot of the Snapped Application](snap/screenshots/view-main-recording.png "Screenshot of the Snapped Application")
+<div align='center'>
+	<img src='snap/screenshots/view-main-recording.png' alt='Screenshot of the Snapped Application' title='Screenshot of the Snapped Application' />
+</div>
 
 <p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters</p>
 
