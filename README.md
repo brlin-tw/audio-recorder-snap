@@ -7,11 +7,11 @@
 <p align="center"><b>This is the snap for Audio Recorder</b>, <i>"A free audio-recorder for Linux"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
-<!-- Uncomment and modify this when you are provided a build status badge
 <p align="center">
-<a href="https://build.snapcraft.io/user/snapcrafters/fork-and-rename-me"><img src="https://build.snapcraft.io/badge/snapcrafters/fork-and-rename-me.svg" alt="Snap Status"></a>
+	<a href="https://build.snapcraft.io/user/Lin-Buo-Ren/audio-recorder-snap">
+		<img src="https://build.snapcraft.io/badge/Lin-Buo-Ren/audio-recorder-snap.svg" alt="Build Status of the Snap" title="Build Status of the Snap">
+	</a>
 </p>
--->
 
 <div align='center'>
 	<img src='snap/screenshots/view-main-recording.png' alt='Screenshot of the Snapped Application' title='Screenshot of the Snapped Application' />
@@ -19,7 +19,7 @@ distributions.</p>
 
 <p align="center">Published for <img src="http://anything.codes/slack-emoji-for-techies/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters</p>
 
-## Installation (not available yet)
+## Installation
 
     sudo snap install --channel=edge --devmode audio-recorder
 
@@ -37,9 +37,9 @@ Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) ar
   - [x] Create a snap that runs in `devmode`
   - [x] Register the snap in the store, **using the preferred upstream name**
   - [x] Add a screenshot to this `README.md`
-  - [ ] Publish the `devmode` snap in the Snap store edge channel
-  - [ ] Add install instructions to this `README.md`
-  - [ ] Update snap store metadata, icons and screenshots
+  - [x] Publish the `devmode` snap in the Snap store edge channel
+  - [x] Add install instructions to this `README.md`
+  - [x] Update snap store metadata, icons and screenshots
   - [ ] Convert the snap to `strict` confinement, or `classic` confinement if it qualifies
   - [ ] Publish the confined snap in the Snap store beta channel
   - [ ] Update the install instructions in this `README.md`
