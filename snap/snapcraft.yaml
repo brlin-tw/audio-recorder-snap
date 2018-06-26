@@ -84,10 +84,6 @@ confinement: strict
     #name: org.gnome.API.AudioRecorderInterface
     #bus: session
 
-  # FIXME: Doesn't appear to work, interface not shown in D-feet
-  #mpris-service:
-    #interface: mpris
-
 apps:
   audio-recorder:
     command: >
@@ -111,6 +107,7 @@ apps:
     # unknown
     - gsettings
     - mount-observe
+    - mpris
 
     # FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
     - hardware-observe
@@ -118,9 +115,6 @@ apps:
     #slots:
     # dbus access
     #- dbus-service
-
-    # player control access
-    #- mpris-service
 
 parts:
   # Patches to fix other parts
