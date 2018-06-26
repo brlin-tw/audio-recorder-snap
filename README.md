@@ -22,6 +22,9 @@ distributions.</p>
 ## Installation
 
     sudo snap install --channel=beta audio-recorder
+    
+    # OPTIONAL: Allow record in removable storage media
+    sudo snap connect audio-recorder:removable-media
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 

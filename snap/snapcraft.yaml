@@ -65,6 +65,12 @@ description: |
   User can also control the recorder from command line with --command <arg> option.
   See audio-recorder --help for more information.
 
+  INFORMATION REGARDING TO SECURITY CONFINEMENT
+
+  Connect to the `removable-media` slot to allow saving recording to removable storages:
+
+    sudo snap connect audio-recorder:removable-media
+
   NOTE: This is NOT an upstream release and is currently maintained by 林博仁(Buo-ren, Lin), refer to the following issue tracker if you encounter any problem when using this snap:
   https://github.com/Lin-Buo-Ren/audio-recorder-snap/issues
 icon: snap/gui/audio-recorder.svg
