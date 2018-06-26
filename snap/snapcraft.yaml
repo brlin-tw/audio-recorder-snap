@@ -231,6 +231,7 @@ parts:
     - libgtk-3-0
 
     # From automigration
+    - libdb5.3
     - libgl1-mesa-glx
     - libglu1-mesa
     - libgpm2
