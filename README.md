@@ -25,6 +25,16 @@ distributions.</p>
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
+## What's Works
+
+* Recording to OGG/MP3 files
+* Sound level meter
+
+## What's Not
+
+* Mpris interface doesn't seem to be working
+* Dbus interface doesn't seem to be working
+
 ## Remaining Tasks
 
 Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) are working to land snap install documentation and the [snapcraft.yaml](https://github.com/snapcrafters/fork-and-rename-me/blob/master/snap/snapcraft.yaml) upstream so Audio Recorder can authoritatively publish future releases.
