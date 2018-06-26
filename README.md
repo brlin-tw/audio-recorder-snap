@@ -21,7 +21,7 @@ distributions.</p>
 
 ## Installation
 
-    sudo snap install --channel=edge --devmode audio-recorder
+    sudo snap install --channel=edge audio-recorder
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
@@ -40,7 +40,7 @@ Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) ar
   - [x] Publish the `devmode` snap in the Snap store edge channel
   - [x] Add install instructions to this `README.md`
   - [x] Update snap store metadata, icons and screenshots
-  - [ ] Convert the snap to `strict` confinement, or `classic` confinement if it qualifies
+  - [x] Convert the snap to `strict` confinement, or `classic` confinement if it qualifies
   - [ ] Publish the confined snap in the Snap store beta channel
   - [ ] Update the install instructions in this `README.md`
   - [ ] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()

@@ -69,11 +69,18 @@ description: |
   https://github.com/Lin-Buo-Ren/audio-recorder-snap/issues
 icon: snap/gui/audio-recorder.svg
 grade: stable
-confinement: devmode
+confinement: strict
 
-slots:
-  mpris-service:
-    interface: mpris
+#slots:
+  # FIXME: Doesn't appear to work, interface not shown in D-feet
+  #dbus-service:
+    #interface: dbus
+    #name: org.gnome.API.AudioRecorderInterface
+    #bus: session
+
+  # FIXME: Doesn't appear to work, interface not shown in D-feet
+  #mpris-service:
+    #interface: mpris
 
 apps:
   audio-recorder:
@@ -98,9 +105,16 @@ apps:
     # unknown
     - gsettings
     - mount-observe
-    slots:
+
+    # FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
+    - hardware-observe
+
+    #slots:
+    # dbus access
+    #- dbus-service
+
     # player control access
-    - mpris-service
+    #- mpris-service
 
 parts:
   # Patches to fix other parts
