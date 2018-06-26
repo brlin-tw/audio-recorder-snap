@@ -38,7 +38,7 @@ distributions.</p>
 * Mpris interface doesn't seem to be working
 * Dbus interface doesn't seem to be working
 * M4A format not working (generated file not playable)
-* Format selection is buggy and not always affective at runtime
+* Format selection is buggy and not always effective at runtime
 
 ## Remaining Tasks
 
