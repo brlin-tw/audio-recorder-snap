@@ -87,43 +87,8 @@ parts:
     prime:
     - -*
 
-
-  # Enable ccache by setting up a dependency of this part
-  # and prepend /usr/lib/ccache to the PATH colon-
-  # separated array:
-  #
-  #   PATH=/usr/lib/ccache:"${PATH}"
-  #
-  # NOTE: Currently the above setup can't be applied to
-  #       scriptlets as plugins doesn't honor env. var.
-  #       customizations.
-  #
-  # or passing custom CC CXX definition to the parts'
-  # configure program.
+  # CCache remote part to minimize snap development iteration
   ccache:
-    plugin: nil
-    build-packages:
-    - ccache
-    # WORKAROUND: Non-snapcraft-generated files are pulled when nil plugin is used - snapcraft - snapcraft.io
-    # https://forum.snapcraft.io/t/non-snapcraft-generated-files-are-pulled-when-nil-plugin-is-used/5913
-    override-pull: 'true'
-    override-build: 'true'
-    override-stage: |
-      set -eu
-
-      mkdir \
-        --parents \
-        "${SNAPCRAFT_STAGE}"/build-tools/bin
-      ln \
-        --force \
-        --symbolic \
-        "$(which ccache)" \
-        "${SNAPCRAFT_STAGE}"/build-tools/bin/gcc
-      ln \
-        --force \
-        --symbolic \
-        "$(which ccache)" \
-        "${SNAPCRAFT_STAGE}"/build-tools/bin/g++
 
   audio-recorder:
     after:
@@ -178,8 +143,6 @@ parts:
     plugin: autotools
     configflags:
     - --datarootdir=/snap/audio-recorder/current/share
-    - CC=ccache gcc
-    - CXX=ccache g++
     build-packages:
     - gcc
     - intltool
