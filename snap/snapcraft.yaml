@@ -77,44 +77,37 @@ icon: snap/gui/audio-recorder.svg
 grade: stable
 confinement: strict
 
+plugs:
+# graphical resources access
+  desktop:
+  desktop-legacy:
+  x11:
+  unity7:
+
+# storage access
+  home:
+  removable-media:
+
+# audio access
+  pulseaudio:
+
+# unknown
+  gsettings:
+  #mount-observe:
+  mpris:
+
+# FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
+  hardware-observe:
+
 #slots:
+  # dbus access
+  #dbus-service:
+
   # FIXME: Doesn't appear to work, interface not shown in D-feet
   #dbus-service:
     #interface: dbus
     #name: org.gnome.API.AudioRecorderInterface
     #bus: session
-
-apps:
-  audio-recorder:
-    command: >
-      desktop-launch
-      audio-recorder
-    desktop: share/applications/audio-recorder.desktop
-    plugs:
-    # graphical resources access
-    - desktop
-    - desktop-legacy
-    - x11
-    - unity7
-
-    # storage access
-    - home
-    - removable-media
-
-    # audio access
-    - pulseaudio
-
-    # unknown
-    - gsettings
-    - mount-observe
-    - mpris
-
-    # FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
-    - hardware-observe
-
-    #slots:
-    # dbus access
-    #- dbus-service
 
 parts:
   # Patches to fix other parts
@@ -265,3 +258,10 @@ parts:
         --file "${SNAPCRAFT_STAGE}"/patches/postprocess-desktop-entries.sed \
         --in-place \
         "${SNAPCRAFT_STAGE}"/share/applications/*.desktop
+
+apps:
+  audio-recorder:
+    command: >
+      desktop-launch
+      audio-recorder
+    desktop: share/applications/audio-recorder.desktop
