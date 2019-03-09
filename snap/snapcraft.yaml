@@ -1,46 +1,6 @@
 %YAML 1.1
 ---
 name: audio-recorder
-version: replaced-by-version-script
-version-script: |
-  set -eu
-
-  cd parts/audio-recorder/src
-  upstream_version="$(
-    grep PACKAGE_VERSION src/config.h \
-      | cut --delimiter=' ' --field=3 \
-      | tr --delete '"'
-  )"
-
-  upstream_dirtiness=''
-  if \
-    test \
-    "$(
-      bzr version-info \
-        --custom \
-        --template={clean}
-    )" \
-    -eq \
-    0; then
-    upstream_dirtiness=-dirty
-  fi
-  upstream_revision="$(
-    bzr version-info \
-      --custom \
-      --template={revno}
-  )"
-  cd ../../..
-
-  packaging_revision="$(
-    git \
-      describe \
-      --abbrev=4 \
-      --always \
-      --dirty=-d
-  )"
-
-  printf -- '%s' "${upstream_version}+rev${upstream_revision}${upstream_dirtiness}+pkg-${packaging_revision}"
-
 summary: A free audio-recorder for Linux
 description: |
   This amazing program allows you to record your favourite music or audio to a file.
@@ -74,6 +34,8 @@ description: |
   NOTE: This is NOT an upstream release and is currently maintained by 林博仁(Buo-ren, Lin), refer to the following issue tracker if you encounter any problem when using this snap:
   https://github.com/Lin-Buo-Ren/audio-recorder-snap/issues
 icon: snap/gui/audio-recorder.svg
+
+adopt-info: audio-recorder
 grade: stable
 confinement: strict
 
@@ -189,6 +151,41 @@ parts:
         --lightweight \
         lp:audio-recorder \
         .
+
+      upstream_version="$(
+        grep AC_INIT configure.ac \
+          | cut --delimiter=',' --field=2 \
+          | sed --regexp-extended 's/.*\[(.*)\].*$/\1/'
+      )"
+
+      upstream_dirtiness=''
+      if \
+        test \
+        "$(
+          bzr version-info \
+            --custom \
+            --template={clean}
+        )" \
+        -eq \
+        0; then
+        upstream_dirtiness=-dirty
+      fi
+      upstream_revision="$(
+        bzr version-info \
+          --custom \
+          --template={revno}
+      )"
+      cd ../../..
+
+      packaging_revision="$(
+        git \
+          describe \
+          --abbrev=4 \
+          --always \
+          --dirty=-d
+      )"
+
+      snapcraftctl set-version "${upstream_version}+rev${upstream_revision}${upstream_dirtiness}+pkg-${packaging_revision}"
 
     plugin: autotools
     configflags:
