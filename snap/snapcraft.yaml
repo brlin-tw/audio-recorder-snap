@@ -112,7 +112,7 @@ plugs:
 parts:
   # Patches to fix other parts
   patches:
-    source: snap/patches
+    source: snap/local/patches
     source-type: local
     plugin: dump
 
