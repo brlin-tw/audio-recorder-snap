@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# This is the maintainence launcher for the snap, make necessary runtime environment changes to make the snap work here.  You may also insert security confinement/deprecation/obsoletion notice of the snap here.
+
+set \
+	-o errexit \
+	-o errtrace \
+	-o nounset \
+	-o pipefail
+
+#export IMPORTANT_ENVIRONMENT_VARIABLE=value
+
+# Fix-up missing icon in other icon theme
+# https://unix.stackexchange.com/questions/150853/how-to-set-gtk-icon-theme-in-i3
+declare gtk3_settings_file=~/.config/gtk-3.0/settings.ini
+
+rm \
+    --force \
+    "${gtk3_settings_file}"
+mkdir \
+    --parents \
+    ~/.config/gtk-3.0
+printf -- \
+    '[Settings]\ngtk-icon-theme-name=Humanity\n' \
+    >"${gtk3_settings_file}"
+
+# Finally run the next part of the command chain
+exec "${@}"

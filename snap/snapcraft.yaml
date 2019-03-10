@@ -36,6 +36,7 @@ description: |
 icon: snap/gui/audio-recorder.svg
 
 adopt-info: audio-recorder
+base: core18
 grade: stable
 confinement: strict
 
@@ -53,6 +54,24 @@ plugs:
   # audio access
   pulseaudio:
 
+  # GNOME and Gtk runtime via content sharing
+  gnome-3-28-1804:
+    interface: content
+    target: $SNAP/gnome-platform
+    default-provider: gnome-3-28-1804
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
+
   # unknown
   gsettings:
   #mount-observe:
@@ -61,15 +80,11 @@ plugs:
   # FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
   hardware-observe:
 
-#slots:
-  # dbus access
-  #dbus-service:
-
-  # FIXME: Doesn't appear to work, interface not shown in D-feet
-  #dbus-service:
-    #interface: dbus
-    #name: org.gnome.API.AudioRecorderInterface
-    #bus: session
+slots:
+  dbus-service:
+    interface: dbus
+    name: org.gnome.API.AudioRecorderInterface
+    bus: session
 
 parts:
   # Patches to fix other parts
@@ -89,11 +104,77 @@ parts:
 
   # CCache remote part to minimize snap development iteration
   ccache:
+    source: https://github.com/ccache/ccache.git
+    #source-branch: 3.5-maint
+    source-depth: 1
+
+    plugin: autotools
+    # https://github.com/ccache/ccache/blob/master/doc/INSTALL.md
+    build-packages:
+    # For building documentation
+    - asciidoc
+    - xsltproc
+
+    - gperf
+    - zlib1g-dev
+    override-build: |
+      set \
+        -o errexit \
+        -o nounset
+      snapcraftctl build
+      install \
+        --directory \
+        --verbose \
+        "${SNAPCRAFT_PART_INSTALL}"/bin
+      for toolchain_command in \
+        "${SNAPCRAFT_PART_INSTALL}"/bin/gcc \
+        "${SNAPCRAFT_PART_INSTALL}"/bin/g++; do
+        ln \
+          --force \
+          --symbolic \
+          --verbose \
+          ./ccache \
+          "${toolchain_command}"
+      done
+      for gcc_release in $(seq 6 9); do
+        ln \
+          --force \
+          --symbolic \
+          --verbose \
+          ./ccache \
+          "${SNAPCRAFT_PART_INSTALL}"/bin/gcc-"${gcc_release}"
+        ln \
+          --force \
+          --symbolic \
+          --verbose \
+          ./ccache \
+          "${SNAPCRAFT_PART_INSTALL}"/bin/g++-"${gcc_release}"
+      done
+    prime:
+    - -*
+
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-depth: 1
+    source-subdir: gtk
+
+    plugin: make
+    build-packages:
+    - build-essential
+    - libgtk-3-dev
+    override-build: |
+      snapcraftctl build
+      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
+
+  launchers:
+    source: snap/local/launchers
+    plugin: dump
+    organize:
+      '*': bin/
 
   audio-recorder:
     after:
     - ccache
-    - desktop-gtk3
     - patches
 
     source: lp:audio-recorder
@@ -151,7 +232,6 @@ parts:
     - libglib2.0-dev
     - libgstreamer1.0-dev
     - libgstreamer-plugins-base1.0-dev
-    - libgtk-3-dev
     - pkg-config
     stage-packages:
     - gstreamer1.0-libav
@@ -160,18 +240,21 @@ parts:
     - gstreamer1.0-plugins-ugly
     - gstreamer1.0-pulseaudio
     - libappindicator3-1
-    - libglib2.0-0
-    - libgstreamer1.0-0
-    - libgstreamer-plugins-base1.0-0
-    - libgtk-3-0
+    #- libgstreamer1.0-0
+    #- libgstreamer-plugins-base1.0-0
 
-    # From automigration
-    - libdb5.3
-    - libgl1-mesa-glx
-    - libglu1-mesa
-    - libgpm2
-    - libxcb-glx0
-    - libxxf86vm1
+    # Hinted by Snapcraft
+    #- libdb5.3
+    #- libgl1-mesa-glx
+    #- libglu1-mesa
+    #- libgpm2
+    #- libslang2
+    #- libxcb-glx0
+    #- libxxf86vm1
+
+    # For debugging purposes
+    - gstreamer1.0-tools
+
     organize:
       snap/audio-recorder/current/: /
     filesets:
@@ -197,6 +280,7 @@ parts:
       - share/pixmaps/*
     stage:
     - $cleanup-debris-from-organizing
+
     override-stage: |
       set -eu
 
@@ -207,9 +291,35 @@ parts:
         --in-place \
         "${SNAPCRAFT_STAGE}"/share/applications/*.desktop
 
+    prime:
+    # Unused gstreamer plugins
+    - -usr/lib/*/gstreamer-1.0/libgstaasink.so
+    - -usr/lib/*/gstreamer-1.0/libgstcacasink.so
+    - -usr/lib/*/gstreamer-1.0/libgstdvd*.so
+    - -usr/lib/*/gstreamer-1.0/libgsteffectv.so
+    - -usr/lib/*/gstreamer-1.0/libgstjack.so
+    - -usr/lib/*/gstreamer-1.0/libgstoss4.so
+    - -usr/lib/*/gstreamer-1.0/libgstrealmedia.so
+    - -usr/lib/*/gstreamer-1.0/libgstvideo4linux2.so
+
+    override-prime: |
+      snapcraftctl prime
+
+      glib-compile-schemas usr/share/glib-2.0/schemas
+      glib-compile-schemas share/glib-2.0/schemas
+
 apps:
   audio-recorder:
-    command: >
-      desktop-launch
-      audio-recorder
+    adapter: full
+    command: bin/audio-recorder
+    command-chain:
+    - bin/desktop-launch
+    - bin/audio-recorder-launch
     desktop: share/applications/audio-recorder.desktop
+    environment:
+      HOME: '$SNAP_USER_COMMON'
+      GSETTINGS_SCHEMA_DIR: $SNAP/share/glib-2.0/schemas
+      LD_LIBRARY_PATH: '$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio'
+    slots:
+    - dbus-service
+
