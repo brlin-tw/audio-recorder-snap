@@ -77,9 +77,6 @@ plugs:
   #mount-observe:
   mpris:
 
-  # FIXME: Required by v4l2 plugin of Gstreamer, should be dropped.
-  hardware-observe:
-
 #slots:
   #dbus-service:
     #interface: dbus
