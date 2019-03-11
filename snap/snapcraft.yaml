@@ -237,17 +237,6 @@ parts:
     - gstreamer1.0-plugins-ugly
     - gstreamer1.0-pulseaudio
     - libappindicator3-1
-    #- libgstreamer1.0-0
-    #- libgstreamer-plugins-base1.0-0
-
-    # Hinted by Snapcraft
-    #- libdb5.3
-    #- libgl1-mesa-glx
-    #- libglu1-mesa
-    #- libgpm2
-    #- libslang2
-    #- libxcb-glx0
-    #- libxxf86vm1
 
     # For debugging purposes
     - gstreamer1.0-tools
