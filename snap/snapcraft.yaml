@@ -176,7 +176,7 @@ parts:
 
     source: lp:audio-recorder
     override-pull: |
-      set -eu
+      set -o nounset
 
       bzr checkout \
         --lightweight \
